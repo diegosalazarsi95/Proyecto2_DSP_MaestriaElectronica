@@ -36,8 +36,15 @@ ah = abs(A);        %Coeficientes numerador en HP deben ser positivos
 %figure
 %freqz(bh,ah,2000)
 
-yn_l = filter(bl,al,xn);
-yn_h = filter(bh,ah,xn);
+N = 110;
+wc = 0.5;
+
+b  = fir1(N, wc, "high");
+b2 = fir1(N, wc, "low");
+
+
+yn_l = filter(b2,1,xn);
+yn_h = filter(b,1,xn);
 
 %==================================== esta es la salida de cada decimacion =====================
 pasa_bajas_decimada = D*downsample(yn_l,D);		%Decimación para el pasa bajas;  
