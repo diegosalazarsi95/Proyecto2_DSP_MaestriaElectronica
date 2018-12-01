@@ -1,7 +1,8 @@
 pkg load communications;
 clear;clc;
 
-function [b1,b2,b3,b4] = data_decompress()
+function [b1,b2,b3,b4] = data_decompress1()
+  tic;
   file_path = input("Escribe la direccion y nombre del archivo comprimido >> ","s");
   file = fopen(file_path,'r');
   ## Se recupera el encabezado
@@ -77,5 +78,5 @@ function [b1,b2,b3,b4] = data_decompress()
   endfor
   exp_c4 = compand(d_c4,255,1,"mu/expander");
   b4 = exp_c4 * Vmax_c4;
-  
+  toc;
 endfunction
