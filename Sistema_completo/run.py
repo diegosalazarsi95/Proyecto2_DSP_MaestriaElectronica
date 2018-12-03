@@ -5,12 +5,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 var=os.listdir("TimonPumbaa/")
 #for i in var:
-for bit4 in range(2,8):
-    for bit3 in range(2,8):
-        for bit2 in range(2,8):
-            for bit1 in range(2,8):
-                os.system('octave Codificador_completo.m TimonPumbaa/WhosTheMonkey.wav %i %i %i %i'%(bit1,bit2,bit3,bit4))
-                #os.system('octave decoMain.m TimonPumbaa/%s'%(i))
+#for bit4 in range(2,8):
+#    for bit3 in range(2,8):
+#        for bit2 in range(2,8):
+#            for bit1 in range(2,8):
+os.system('octave Codificador_completo.m TimonPumbaa/WhosTheMonkey.wav %i %i %i %i'%(bit1,bit2,bit3,bit4))
+os.system('octave decoMain.m TimonPumbaa/%s'%(i))
 
 
 #    plt.figure(figsize=(10,10))

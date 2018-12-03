@@ -1,6 +1,8 @@
 clear all; close;
 pkg load communications;
 pkg load signal;
+#!/usr/bin/env octave -q
+archivo = (argv(){1});
 
 %==================================================================
 %     Parametros
@@ -11,12 +13,12 @@ N = 100;
 wc = 0.5;
 b  = fir1(N, wc, "high");
 b2 = fir1(N, wc, "low");
-[audio_in, Fs] = audioread("WhosTheMonkey.wav");
+[audio_in, Fs] = audioread(archivo);
 
 %==================================================================
 %     Descompresion
 %==================================================================
-[banda4,banda3,banda2,banda1] = data_decompress();
+[banda4,banda3,banda2,banda1] = data_decompress2();
 
 %==================================================================
 %     se aplica la interpolacion por primeravez
