@@ -1,5 +1,5 @@
-pkg load communications;
-clear;clc;
+##pkg load communications;
+##clear;clc;
 
 function [b1,b2,b3,b4] = data_decompress2()
   tic;
@@ -16,30 +16,31 @@ function [b1,b2,b3,b4] = data_decompress2()
   bits_c4 = fread(file,1,'uint8');
   c_size =fread(file,1,'uint64');
   ## Se recuperan los datos
-  i = 1;
-  while( !feof(file))
-    temp = fread(file,1,'uint8');
-    if(length(temp)!= 0)
-      data(i) = temp;
-    endif
-    i++;
-  endwhile
-   ##Se obtienen los datos en bin
+  data=fread(file,'uint8');
+  fclose(file);
+  
+  ##Se obtienen los datos en bin
   c = dec2bin(data,8);
-  for i = 1:length(c)
-    c_r(1+(i-1)*8:8*i)=c(i,:);
-  endfor
-  ##Se ordenan datos según extensión en la muestra correspondiente
+  c_r = c.'(:).';
+  
+  ##Se ordena los datos por banda
   limit_c1 = ceil(bits_c1*c_size/8)*8;
   limit_c2 = ceil(bits_c2*c_size/8)*8 + limit_c1;
   limit_c3 = ceil(bits_c3*c_size/8)*8 + limit_c2;
-  for i = 1:c_size
-    d_c1(i,1:bits_c1) = c_r(1+bits_c1*(i-1):bits_c1*i);
-    d_c2(i,1:bits_c2) = c_r(limit_c1+1+bits_c1*(i-1):limit_c1+bits_c1*i);
-    d_c3(i,1:bits_c3) = c_r(limit_c2+1+bits_c1*(i-1):limit_c2+bits_c1*i);
-    d_c4(i,1:bits_c4) = c_r(limit_c3+1+bits_c1*(i-1):limit_c3+bits_c1*i);
-  endfor
-  ##Se quita el offset, se normaliza, se expande con mu-law y desnormaliza
+  
+  d_c1 = c_r(1,1:bits_c1*c_size);
+  d_c1 = flip(rotdim(reshape(d_c1,bits_c1,c_size)));
+  
+  d_c2 = c_r(1,limit_c1+1:limit_c1+bits_c2*c_size);
+  d_c2 = flip(rotdim(reshape(d_c2,bits_c2,c_size)));
+  
+  d_c3 = c_r(1,limit_c2+1:limit_c2+bits_c3*c_size);
+  d_c3 = flip(rotdim(reshape(d_c3,bits_c3,c_size)));
+  
+  d_c4 = c_r(1,limit_c3+1:limit_c3+bits_c4*c_size);
+  d_c4 = flip(rotdim(reshape(d_c4,bits_c4,c_size)));
+  
+ ##Se quita el offset, se normaliza, se expande con mu-law y desnormaliza
   d_c1 = (bin2dec(d_c1)-(2^(bits_c1-1)-1))/(2^(bits_c1-1)-1); ##Se quita el offset y se normaliza
   exp_c1 = compand(d_c1,255,1,"mu/expander"); ##Se expande con algoritmo mu-law
   b1 = exp_c1 * Vmax_c1; ## Se desnormaliza
@@ -56,5 +57,4 @@ function [b1,b2,b3,b4] = data_decompress2()
   exp_c4 = compand(d_c4,255,1,"mu/expander"); 
   b4 = exp_c4 * Vmax_c4; 
   toc;
-  
 endfunction

@@ -21,6 +21,7 @@ function [b1,b2,b3,b4] = data_decompress2()
     endif
     i++;
   endwhile
+  fclose(file);
    ##Se obtienen los datos en bin
   c = dec2bin(data,8);
   for i = 1:length(c)
